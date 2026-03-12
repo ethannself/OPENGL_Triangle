@@ -4,7 +4,7 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
-// need vertex shader, fragment shader source
+
 const char* vertexShaderSource = "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"
 "void main()\n"
@@ -21,7 +21,8 @@ const char* fragmentShaderSource = "#version 330 core\n"
 
 int main() {
 
-
+	//glfw init, config
+	//=========================
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -42,6 +43,8 @@ int main() {
 		glfwTerminate();
 		return -1;
 	}
+	// vertex, fragment shader setup
+	//===============================
 	unsigned int vertexShader, fragmentShader;
 	// compile vertex shader
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -66,6 +69,7 @@ int main() {
 		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 	// create shader program
+	//======================
 	unsigned int shaderProgram;
 	shaderProgram = glCreateProgram();
 
@@ -73,7 +77,8 @@ int main() {
 	glAttachShader(shaderProgram, fragmentShader);
 	
 	glLinkProgram(shaderProgram);
-
+	// initialize vertices of the triangle, setup VAO/VBO
+	//==================================
 	float vertices[] = {
 		0.5f, 0.5f, 0.0f,
 		0.5f, -0.5f, 0.0f,
@@ -92,11 +97,13 @@ int main() {
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-
+	// render loop
+	//======================================
 	while (!glfwWindowShouldClose(window)) {
-		// process inpur
+		// process input
+		//==========================
 		processInput(window);
-		//rendering
+		// rendering
 		//==========================
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -106,7 +113,8 @@ int main() {
 
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		glBindVertexArray(0);
-		//poll events, swap buffers
+		// event polling, buffer swap
+		//=========================
 		glfwPollEvents();
 		glfwSwapBuffers(window);
 	}
